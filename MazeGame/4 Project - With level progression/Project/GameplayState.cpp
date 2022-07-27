@@ -6,6 +6,7 @@
 #include <assert.h>
 
 #include "Enemy.h"
+#include "Blackhole.h"
 #include "Key.h"
 #include "Door.h"
 #include "Money.h"
@@ -33,6 +34,7 @@ GameplayState::GameplayState(StateMachineExampleGame* pOwner)
 	m_LevelNames.push_back("Level1.txt");
 	m_LevelNames.push_back("Level2.txt");
 	m_LevelNames.push_back("Level3.txt");
+	m_LevelNames.push_back("Level4.txt");
 }
 
 GameplayState::~GameplayState()
@@ -187,6 +189,15 @@ void GameplayState::HandleCollision(int newPlayerX, int newPlayerY)
 				m_player.SetPosition(newPlayerX, newPlayerY);
 				AudioManager::GetInstance()->PlayKeyPickupSound();
 			}
+			break;
+		}
+		case ActorType::Blackhole:
+		{
+			Blackhole* collidedBlackhole = dynamic_cast<Blackhole*>(collidedActor);
+			assert(collidedBlackhole);
+			int randomX = 1 + (rand() % (m_pLevel->GetWidth() - 1));
+			int randomY = 1 + (rand() % (m_pLevel->GetHeight() - 1));
+			m_player.SetPosition(randomX, randomY);
 			break;
 		}
 		case ActorType::Door:
